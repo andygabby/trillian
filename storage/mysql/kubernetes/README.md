@@ -9,7 +9,11 @@ To run a Galera MySQL cluster on Google Cloud, install the
 [Provision a Container cluster](https://cloud.google.com/container-engine/docs/clusters/operations),
 then run the following command:
 ```shell
-kubectl apply -f $GOPATH/src/github.com/google/trillian/storage/mysql/kubernetes
+kubectl apply -f $GOPATH/src/github.com/google/trillian/storage/mysql/kubernetes/galera.yaml
+```
+In AWS this can be accomplished using the aws yaml file:
+```
+kubectl apply -f $GOPATH/src/github.com/google/trillian/storage/mysql/kubernetes/galera-aws.yaml
 ```
 
 This will start the Galera cluster. You can monitor provisoning of this cluster
