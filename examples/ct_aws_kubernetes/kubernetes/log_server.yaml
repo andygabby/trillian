@@ -1,0 +1,53 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: trillian_log_server-svc
+  labels:
+    app: trillian_log_server
+spec:
+  ports:
+    - port: 8090
+      name: trillian_log_server
+  type: LoadBalancer
+  # Do we need session affinity?
+  selector:
+    app: trillian_log_server
+  loadBalancerSourceRanges:
+    - 10.0.0.0/8
+---
+apiVersion: apps/v1beta1
+kind: Deployment
+metadata:
+  name: trillian_log_server-deployment
+spec:
+  replicas: 3
+  template:
+    metadata:
+      lables:
+        app: trillian_log_server
+    spec:
+      containers:
+        - name: trillian_log_server
+          image: andygabby/trillian_log_server:latest
+          ports:
+          - containerPort: 8090
+          - containerPort: 8091
+          - containerPort: 8092
+      env:
+        - name: DB_USER
+          valueFrom:
+            secretKeyRef:
+              name: trillian-credentials
+              key: db-user
+        - name: DB_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: trillian-credentials
+              key: db-password
+        - name: DB_DATABASE
+          valueFrom:
+            secretKeyRef:
+              name: trillian-credentials
+              key: db-name
+        - name: DB_HOST
+          value: mysql
